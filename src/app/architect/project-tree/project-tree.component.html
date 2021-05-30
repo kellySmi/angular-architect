@@ -1,0 +1,15 @@
+<!-- <ng-container > -->
+  <div class="sub" *ngFor="let child of nodes">
+    <label>
+      <span *ngIf="child.fileContents">File</span>
+      <span *ngIf="child.dirContents">Directory</span> Name: {{child.name}}</label>
+    <div class="sub">
+      <ng-container *ngIf="child.fileContents;else dirNode">
+        <app-project-tree-node [node]="child"></app-project-tree-node>
+      </ng-container>
+      <ng-template #dirNode>
+        <app-project-tree [nodes]="child.dirContents"></app-project-tree>
+      </ng-template>
+    </div>
+  </div>
+

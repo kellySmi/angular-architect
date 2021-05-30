@@ -1,0 +1,43 @@
+<nz-card class="card-style" [nzBordered]="false" [nzTitle]="node.name" [nzExtra]="extraTemp">
+  Path: {{node.path}}
+  <div *ngIf="node.dirContents">
+    <button (click)="showDirFileContents()">
+      <span *ngIf="node.displayFileDir">Hide </span>
+      <span *ngIf="!node.displayFileDir">Show </span>
+      Dir
+    </button>
+  </div>
+  <div *ngIf="node.fileContents && (node.name | endsWith : ['.component.ts','.module.ts']) ">
+    <button (click)="showDirFileContents()">
+      <span *ngIf="node.displayFileDir">Hide </span>
+      <span *ngIf="!node.displayFileDir">Show </span>
+      File
+    </button>
+    <div class="fileObj" *ngIf="node.fileObj && node.displayFileDir">
+      <label >
+        Name: {{node.fileObj.name}}
+      </label>
+      <label *ngIf="node.fileObj.declaration?.length">
+        Declarations
+        <ul>
+          <li *ngFor="let dec of node.fileObj.declaration">{{dec}}</li>
+        </ul>
+      </label>
+      <label *ngIf="node.fileObj.importFiles?.length">
+        Import Files
+        <ul>
+          <li *ngFor="let impF of node.fileObj.importFiles">{{impF}}</li>
+        </ul>
+      </label>
+      <label *ngIf="node.fileObj.imports?.length">
+        Imports
+      <ul>
+        <li *ngFor="let imp of node.fileObj.imports">{{imp}}</li>
+      </ul></label>
+    </div>
+  </div>
+</nz-card>
+<ng-template #extraTemp>
+ Type: <span *ngIf="node.dirContents">Directory</span> <span *ngIf="node.fileContents">File</span>
+</ng-template>
+

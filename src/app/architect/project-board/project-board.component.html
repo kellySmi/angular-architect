@@ -1,0 +1,9 @@
+<section class="main-board">
+  <!-- <app-canvas-board></app-canvas-board> -->
+  <div *ngFor="let node of nodes">
+    <app-project-node [node]="node"></app-project-node>
+    <span class="dir-node" *ngIf="node.dirContents && node.displayFileDir">
+      <app-project-board [nodes]="node.dirContents"></app-project-board>
+    </span>
+  </div>
+</section>

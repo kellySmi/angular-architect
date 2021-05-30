@@ -1,0 +1,25 @@
+<div *ngIf="node">
+  <label>File path : {{node.path}}</label>
+  <span *ngIf="fileInfo == 'component' && fileContent">
+      <div *ngIf="fileContent.declarations.length">
+        <label>Declarations:</label>
+        <div class="sub" *ngFor="let dec of fileContent.declarations">
+          {{dec}}
+        </div>
+      </div>
+      <div *ngIf="fileContent.importFiles.length">
+        <label>Import Files:</label>
+        <div class="sub" *ngFor="let impF of fileContent.importFiles">
+          {{impF}}
+        </div>
+      </div>
+      <div *ngIf="fileContent.imports.length">
+        <label>Imports:</label>
+        <div class="sub" *ngFor="let imp of fileContent.imports">
+          {{imp}}
+        </div>
+      </div>
+  </span>
+</div>
+
+

@@ -1,0 +1,9 @@
+
+<section>
+  <div>
+    <button (click)="selectProject()">Select Project Directory to scan</button>
+  </div>
+  <div *ngIf="filesAr">
+    <app-project *ngIf="filesAr" [projectFiles]="filesAr"></app-project>
+  </div>
+</section>

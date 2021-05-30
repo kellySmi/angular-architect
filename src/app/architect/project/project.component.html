@@ -1,0 +1,8 @@
+<section>
+  <h1>Project Summary</h1>
+  <div *ngIf="projectInfo">
+    <span>Project Name: {{projectInfo.projectName}}</span>
+    <!-- <app-project-tree [nodes]="projectFiles"></app-project-tree> -->
+    <app-project-board [nodes]="projectApp"></app-project-board>
+  </div>
+</section>
