@@ -15,6 +15,7 @@ import * as ts from 'typescript';
 })
 export class ArchitectService {
   //public project$ : Observable<any> = new Observable();
+  private componentList = [];
   constructor() { }
 
   anaylizeProject(appDir: any[] ): any{
@@ -92,26 +93,57 @@ export class ArchitectService {
    *
    */
   public parseModuleFile(fileStr:string):any {
-    const rtnObj : any = {name:'', importFiles:[], declarations:[],imports:[]};
+    const rtnObj : any = {name:'', selector: '', template:'', importFiles:[], declarations:[],imports:[]};
     const node = ts.createSourceFile('app.module.ts',fileStr,ts.ScriptTarget.Latest);
+    //console.log("node",node);
+    let selTxt = node.text.substr(node.text.indexOf("selector:"));
+    selTxt = selTxt.substr(0,selTxt.indexOf(","));
+    if(selTxt){
+      selTxt = selTxt.replace('selector:','').replace(/'/g,'').trim();
+      rtnObj.selector = selTxt;
+      this.componentList.push(selTxt);
+    }
+    let tempTxt = node.text.substr(node.text.indexOf("template:"));
+    if(tempTxt){
+      tempTxt = tempTxt.replace('template:','').replace(/'/g,'');
+      rtnObj.template = tempTxt;
 
-    console.log('node',node);
+    }
     node.forEachChild(child => {
-      console.log(child.kind);
+      //console.log("child",child);
       if (ts.SyntaxKind[child.kind] === 'ImportDeclaration') {
-        console.log("imprt-child",child);
-        const x = child['importClause'].namedBindings.elements.map(el => el.name.escapedText);
-        //console.log('dec',x);
-        rtnObj.declarations = rtnObj.declarations.concat(x);
-        //console.log('elements',child['importClause'].namedBindings.elements);
+        const dec = child['importClause'].namedBindings.elements.map(el => el.name.escapedText);
+        rtnObj.declarations = rtnObj.declarations.concat(dec);
       }
       if (ts.SyntaxKind[child.kind] === 'ClassDeclaration') {
         rtnObj.name = child['name'].escapedText;
       }
     });
+
     return of(rtnObj);
   }
 
+  public parseTemplateFile(fileStr:string):any {
+    const rtnObj : any = {components:[]};
+    const parser = new DOMParser();
+    const tempObj = parser.parseFromString(fileStr, "text/html");
+    console.log("comps",this.componentList);
+    this.componentList.forEach(cp => {
 
+      const q = tempObj.querySelectorAll(cp);
+      if(q.length) rtnObj.components.push(cp);
+      console.log("cp q",cp,q);
+    });
+    //console.log(tempObj.querySelectorAll('app-hours'));
+    return of(rtnObj);
+  }
 
+  private collectionContains(collection, searchText) {
+    for (let i = 0; i < collection.length; i++) {
+      if( collection[i].innerText.toLowerCase().indexOf(searchText) > -1 ) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

@@ -15,16 +15,26 @@ export class ProjectNodeComponent implements OnInit {
   constructor(private architectService: ArchitectService) { }
 
   ngOnInit(): void {
+    if(this.node.fileContents && this.node.name.endsWith('.component.ts')) this.showDirFileContents();
   }
 
   public showDirFileContents():void{
     if(this.node.fileContents){
       if(!this.node.fileObj){
-        this.architectService.parseModuleFile(this.node.fileContents)
-          .subscribe(res => {
-            this.node.fileObj = res;
-            this.node.displayFileDir = this.node.displayFileDir ? false : true;
-          });
+        if(this.node.name.endsWith('.html')){
+          this.architectService.parseTemplateFile(this.node.fileContents)
+            .subscribe(res => {
+              //console.log(res);
+              this.node.fileObj = res;
+              this.node.displayFileDir = this.node.displayFileDir ? false : true;
+            });
+        }else{
+          this.architectService.parseModuleFile(this.node.fileContents)
+            .subscribe(res => {
+              this.node.fileObj = res;
+              this.node.displayFileDir = this.node.displayFileDir ? false : true;
+            });
+        }
       }else{
         this.node.displayFileDir = this.node.displayFileDir ? false : true;
       }

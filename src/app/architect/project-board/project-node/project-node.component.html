@@ -7,20 +7,29 @@
       Dir
     </button>
   </div>
-  <div *ngIf="node.fileContents && (node.name | endsWith : ['.component.ts','.module.ts']) ">
+  <div *ngIf="node.fileContents && (node.name | endsWith : ['.component.ts','.module.ts','.html']) ">
     <button (click)="showDirFileContents()">
       <span *ngIf="node.displayFileDir">Hide </span>
       <span *ngIf="!node.displayFileDir">Show </span>
       File
     </button>
     <div class="fileObj" *ngIf="node.fileObj && node.displayFileDir">
-      <label >
-        Name: {{node.fileObj.name}}
+      <label *ngIf="node.fileObj.components?.length">
+        components:
+        <ul>
+          <li *ngFor="let comp of node.fileObj.components">{{comp}}</li>
+        </ul>
       </label>
-      <label *ngIf="node.fileObj.declaration?.length">
+      <label *ngIf="node.fileObj.selector">
+        Selector: {{node.fileObj.selector}}
+      </label>
+      <label *ngIf="node.fileObj.template">
+        Template: {{node.fileObj.template}}
+      </label>
+      <label *ngIf="node.fileObj.declarations?.length">
         Declarations
         <ul>
-          <li *ngFor="let dec of node.fileObj.declaration">{{dec}}</li>
+          <li *ngFor="let dec of node.fileObj.declarations">{{dec}}</li>
         </ul>
       </label>
       <label *ngIf="node.fileObj.importFiles?.length">
@@ -33,7 +42,8 @@
         Imports
       <ul>
         <li *ngFor="let imp of node.fileObj.imports">{{imp}}</li>
-      </ul></label>
+      </ul>
+    </label>
     </div>
   </div>
 </nz-card>
